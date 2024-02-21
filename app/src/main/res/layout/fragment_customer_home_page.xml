@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/customer_home_page_frame_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".customerHomePage">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/instant_ride_button"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_margin="40dp"
+                android:text="@string/instant_ride"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:backgroundTint="@color/primary_yellow"
+                android:textSize="20sp"/>
+
+            <Button
+                android:id="@+id/prebook_button"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="@string/prebook"
+                android:layout_marginTop="40dp"
+                android:layout_marginHorizontal="40dp"
+                android:layout_marginBottom="100dp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:backgroundTint="@color/primary_yellow"
+                android:textSize="20sp"/>
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
