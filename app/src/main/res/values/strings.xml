@@ -16,4 +16,19 @@
     <string name="number_of_passengers">Number of Passengers</string>
     <string name="enable_sharing">Enable Sharing</string>
     <string name="lets_go">Lets go!</string>
+    <string name="map">Map for pickup and Destination locations</string>
+    <string name="createAccount">Create your account</string>
+    <string name="firstname">Firstname</string>
+    <string name="lastname">Lastname</string>
+    <string name="email">Email Address</string>
+    <string name="phone">Phone Number</string>
+    <string name="next">Next</string>
+    <string name="login">Login</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="forgotpassword">Forgot Password?</string>
+    <string name="newusersignup">New user? Sign Up</string>
+    <string name="welcomeback">Welcome Back</string>
+    <string name="signup">Sign up</string>
+    <string name="passwordrepeat">Repeat Password</string>
 </resources>

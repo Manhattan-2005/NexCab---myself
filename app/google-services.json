@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "494409399932",
+    "project_id": "nexcab-6112c",
+    "storage_bucket": "nexcab-6112c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:494409399932:android:b3a91c39f8154c2e1253f9",
+        "android_client_info": {
+          "package_name": "com.example.nexcab"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFZaDnGJ1uBWS-UhuVk9aWpdrqnvbLJvY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

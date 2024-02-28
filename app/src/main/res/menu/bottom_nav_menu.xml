@@ -4,25 +4,21 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/home"
-        android:title="@string/home"
-        />
+        android:title="@string/home"/>
 
     <item
         android:id="@+id/navigation_rides"
         android:icon="@drawable/rides"
-        android:title="@string/rides"
-        android:iconTint="@color/black"/>
+        android:title="@string/rides"/>
 
     <item
         android:id="@+id/navigation_inbox"
         android:icon="@drawable/inbox"
-        android:title="@string/title_inbox"
-        android:iconTint="@color/black"/>
+        android:title="@string/title_inbox"/>
 
     <item
         android:id="@+id/navigation_settings"
         android:icon="@drawable/settings"
-        android:title="@string/title_settings"
-        android:iconTint="@color/black"/>
+        android:title="@string/title_settings"/>
 
 </menu>

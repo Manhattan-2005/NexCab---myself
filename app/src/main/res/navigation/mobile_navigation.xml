@@ -13,20 +13,20 @@
 
     <fragment
         android:id="@+id/navigation_rides"
-        android:name="com.example.nexcab.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
+        android:name="com.example.nexcab.ui.rides.DashboardFragment"
+        android:label="Rides"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
         android:id="@+id/navigation_inbox"
-        android:name="com.example.nexcab.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
+        android:name="com.example.nexcab.ui.inbox.NotificationsFragment"
+        android:label="Inbox"
         tools:layout="@layout/fragment_notifications" />
 
     <fragment
         android:id="@+id/navigation_settings"
-        android:name="com.example.nexcab.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:name="com.example.nexcab.ui.settings.SettingsFragment"
+        android:label="Settings"
+        tools:layout="@layout/fragment_settings" />
 
 </navigation>
