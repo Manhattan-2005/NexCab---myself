@@ -13,7 +13,6 @@
         android:layout_gravity="center"
         android:text="settings will be updated soon"
         android:textAlignment="center"
-        android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

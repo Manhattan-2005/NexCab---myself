@@ -1,5 +1,6 @@
 package com.example.nexcab;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import java.util.Objects;
 
 public class customerHomePage extends Fragment {
     FragmentCustomerHomePageBinding binding;
+    Intent intent;
     public customerHomePage() {
         // Required empty public constructor
     }
@@ -37,7 +39,8 @@ public class customerHomePage extends Fragment {
         instant_ride.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                replaceFragment(binding.getRoot());
+                intent = new Intent(getContext(), Location.class);
+                startActivity(intent);
             }
         });
         prebook.setOnClickListener(new View.OnClickListener() {

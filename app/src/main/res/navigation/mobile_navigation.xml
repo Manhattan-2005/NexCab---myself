@@ -13,9 +13,9 @@
 
     <fragment
         android:id="@+id/navigation_rides"
-        android:name="com.example.nexcab.ui.rides.DashboardFragment"
+        android:name="com.example.nexcab.ui.rides.RideFragment"
         android:label="Rides"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_ride" />
 
     <fragment
         android:id="@+id/navigation_inbox"
