@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.nexcab.MainActivity;
+import com.example.nexcab.models.User;
 import com.example.nexcab.R;
 import com.example.nexcab.databinding.ActivityLoginBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,6 +21,7 @@ import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
 
+    Intent intent;
     ActivityLoginBinding loginBinding;
     FirebaseAuth auth;
     @Override
@@ -27,6 +29,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         loginBinding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(loginBinding.getRoot());
+
+        // get the role of user (driver / rider )
+//        intent = getIntent();
+//        String role = intent.getStringExtra("role");
 
         // hide the Action bar
         Objects.requireNonNull(getSupportActionBar()).hide();
@@ -37,7 +43,9 @@ public class LoginActivity extends AppCompatActivity {
         loginBinding.signupredirect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),SignUpActivity.class);
+                intent = new Intent(getApplicationContext(),SignUpActivity.class);
+                // pass role (driver / customer)
+//                intent.putExtra("role",role);
                 startActivity(intent);
             }
         });
@@ -62,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                                 if(task.isSuccessful()) {
                                     Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//                                    intent.putExtra("role",User.temprole);
                                     startActivity(intent);
                                 }else{
                                     Toast.makeText(LoginActivity.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();

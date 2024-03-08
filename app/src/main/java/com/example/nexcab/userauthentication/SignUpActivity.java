@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -26,11 +27,15 @@ public class SignUpActivity extends AppCompatActivity {
     ActivitySignUpBinding binding;
     private FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
+    Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivitySignUpBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // get role of user (driver / rider)
+//        String role = intent.getStringExtra("role");
 
         // hide the Action bar
         Objects.requireNonNull(getSupportActionBar()).hide();
@@ -39,7 +44,8 @@ public class SignUpActivity extends AppCompatActivity {
         binding.login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+                intent = new Intent(getApplicationContext(),LoginActivity.class);
+//                intent.putExtra("role",role);
                 startActivity(intent);
             }
         });
@@ -58,7 +64,8 @@ public class SignUpActivity extends AppCompatActivity {
                                 // Add to real time database if task is successful
                                 if(task.isSuccessful()){
                                     User user = new User(binding.firstname.getText().toString(),binding.lastname.getText().toString(),
-                                            binding.email.getText().toString(),binding.password.getText().toString());
+                                            binding.email.getText().toString(),binding.password.getText().toString(),User.temprole);
+                                    user.setHasUpcomingRide(false);
                                     Toast.makeText(SignUpActivity
                                             .this, "User Created Successfully!", Toast.LENGTH_SHORT).show();
                                     String id = task.getResult().getUser().getUid();

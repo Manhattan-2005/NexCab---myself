@@ -14,15 +14,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.example.nexcab.databinding.FragmentCustomerHomePageBinding;
+import com.example.nexcab.models.User;
 
-import java.util.Objects;
-
-public class customerHomePage extends Fragment {
+public class CustomerHomePage extends Fragment {
     FragmentCustomerHomePageBinding binding;
     Intent intent;
-    public customerHomePage() {
+    public CustomerHomePage() {
         // Required empty public constructor
     }
 
@@ -39,8 +39,12 @@ public class customerHomePage extends Fragment {
         instant_ride.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent = new Intent(getContext(), Location.class);
-                startActivity(intent);
+                if (!User.getUser().isHasUpcomingRide()) {
+                    intent = new Intent(getContext(), Location.class);
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(getContext(),"You can only make one Instant Ride!",Toast.LENGTH_SHORT);
+                }
             }
         });
         prebook.setOnClickListener(new View.OnClickListener() {
@@ -50,6 +54,19 @@ public class customerHomePage extends Fragment {
             }
         });
         return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        binding.prebookButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent = new Intent(getContext(),Prebook.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void replaceFragment(View view){

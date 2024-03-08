@@ -16,9 +16,12 @@ import android.widget.Toast;
 
 import com.example.nexcab.databinding.FragmentDropoffLocationBinding;
 
-public class DropoffLocation extends Fragment {
+import java.util.Objects;
 
+public class DropoffLocation extends Fragment {
+    Bundle bundle;
     FragmentDropoffLocationBinding binding;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -35,15 +38,28 @@ public class DropoffLocation extends Fragment {
             public void onClick(View v) {
                 if(!binding.dropoffLocationString.getText().toString().equals("")){
                     // create bundle to pass object to next fragment
-                    Bundle bundle = getArguments();
+                    bundle = getArguments();
+                    String parentFragment = bundle.getString("ParentFragment");
+
                     bundle.putString("dropoffLocation",binding.dropoffLocationString.getText().toString());
+                    if(Objects.equals(parentFragment, "PickupLocation")) {
+                        bundle.putString("ParentFragment","DropoffLocation");
+                    } else if(Objects.equals(parentFragment, "PickupLocationPreebook")) {
+                        bundle.putString("ParentFragment","DropoffLocationPreebook");
+                    }
 
                     Fragment fragment = new ConfirmRide();
                     // pass data to next fragment
                     fragment.setArguments(bundle);
                     FragmentManager fragmentManager = getParentFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.location_frameLayout_id,fragment);
+
+                    if(Objects.equals(parentFragment, "PickupLocation")) {
+                        fragmentTransaction.replace(R.id.location_frameLayout_id, fragment);
+                    } else if(Objects.equals(parentFragment, "PickupLocationPreebook")) {
+                        fragmentTransaction.replace(R.id.prebook_container,fragment);
+                    }
+
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
                     Log.d("onclick", "Fragment Succesfully replaced to DropoffLocation");

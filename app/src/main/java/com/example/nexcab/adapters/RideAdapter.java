@@ -33,7 +33,8 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
     public void onBindViewHolder(@NonNull RideAdapter.RideViewHolder holder, int position) {
         String s = "Pickup Location : "+rides.get(position).getPickupLocation()+"\n";
         s += "Dropoff Location : "+rides.get(position).getDropoffLocation()+"\n";
-        s += "Date : "+rides.get(position).getDate();
+        s += "Date : "+rides.get(position).getDate()+"\n";
+        s += "Status: "+rides.get(position).getStatus();
         Log.d("RideAdapter", "After Initialization: "+s);
         holder.textView.setText(s);
     }

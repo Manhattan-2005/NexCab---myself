@@ -9,4 +9,14 @@
         android:id="@+id/pickup_location"
         android:name="com.example.nexcab.PickupLocation"
         tools:layout="@layout/fragment_pickup_location"/>
+
+    <fragment
+        android:id="@+id/pick_date_time"
+        android:name="com.example.nexcab.PickDateTimeFragment"
+        tools:layout="@layout/fragment_pick_date_time"/>
+
+    <fragment
+        android:id="@+id/confirm_ride"
+        android:name="com.example.nexcab.ConfirmRide"
+        tools:layout="@layout/fragment_confirm_ride"/>
 </navigation>

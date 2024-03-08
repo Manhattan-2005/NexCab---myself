@@ -19,9 +19,13 @@ import android.widget.Toast;
 import com.example.nexcab.databinding.FragmentPickupLocationBinding;
 import com.example.nexcab.models.Ride;
 
+import java.util.Objects;
+
 public class PickupLocation extends Fragment {
 FragmentPickupLocationBinding binding;
+Fragment parentFragment;
 Intent intent;
+Bundle bundle;
 
     @Nullable
     @Override
@@ -33,28 +37,50 @@ Intent intent;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         binding.nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(!binding.pickupLocationString.getText().toString().equals("")){
-                    // create bundle to pass object to next fragment
-                    Bundle bundle = new Bundle();
-                    bundle.putString("pickupLocation",binding.pickupLocationString.getText().toString());
-
-                    Fragment fragment = new DropoffLocation();
-                    // pass data to next fragment
-                    fragment.setArguments(bundle);
-                    FragmentManager fragmentManager = getParentFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.location_frameLayout_id,fragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
-                    Log.d("onclick", "Fragment Succesfully replaced to DropoffLocation");
+                    sendPickupLocation();
                 }else{
                     Toast.makeText(getContext(), "Please select location!", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
+    }
+
+    public void sendPickupLocation(){
+        // create bundle to pass object to next fragment
+        bundle = getArguments();
+        String parentFragment = "";
+
+        // get ParentFragment and set it according to instant ride or preebook
+        if(bundle == null) {
+            bundle = new Bundle();
+            bundle.putString("ParentFragment","PickupLocation");
+        }
+        else{
+            parentFragment = bundle.getString("ParentFragment");
+            bundle.putString("ParentFragment","PickupLocationPreebook");
+        }
+        //set the bundle values
+        bundle.putString("pickupLocation", binding.pickupLocationString.getText().toString());
+
+        Fragment fragment = new DropoffLocation();
+        // pass data to next fragment
+        fragment.setArguments(bundle);
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if(Objects.equals(parentFragment, "")) {
+            Log.d("Parent Fragment", "Parent Fragment is null ");
+            fragmentTransaction.replace(R.id.location_frameLayout_id, fragment);
+        }
+        else
+            fragmentTransaction.replace(R.id.prebook_container,fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+        Log.d("onclick", "Fragment Succesfully replaced to DropoffLocation");
     }
 }
