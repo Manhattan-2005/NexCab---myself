@@ -10,12 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.nexcab.R;
+import com.example.nexcab.databinding.ActivityDriverBinding;
 
 
 public class DriverDashboard extends Fragment {
 
+    ActivityDriverBinding binding;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = ActivityDriverBinding.inflate(getLayoutInflater());
     }
 }

@@ -1,28 +1,45 @@
 package com.example.nexcab;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
-import com.example.nexcab.models.Ride;
-import com.example.nexcab.ui.rides.RideFragment;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.customview.widget.Openable;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.nexcab.databinding.ActivityMainBinding;
+import com.example.nexcab.driver.DriverActivity;
+import com.example.nexcab.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private NavController navController;
 
-    NavController navController;
+    private static final int REQUEST_CODE_NOTIFICATION_ACCESS = 101;
+    private static String DEVICE_REGISTRATION_TOKEN;
+    private FirebaseDatabase database;
+    private FirebaseAuth auth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,22 +47,64 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_rides, R.id.navigation_inbox, R.id.navigation_settings)
-                .build();
-        navController = Navigation.findNavController(this, R.id.nav_host_fragment_customer_home_page);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, navController);
+        // hide the action bar
+        getSupportActionBar().hide();
 
-        // using intent to identify if called from some activity inside app
-        // if called from booking activity then move navigation bar to rides
+        getDeviceRegistrationToken();
+
+        // get database and user reference
+        auth = FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+
+        setupRiderNavigation();
+
+        // Handle intent if called from booking activity
         Intent intent = getIntent();
         String source = intent.getStringExtra("Source");
         if (source != null && source.equals("booking")) {
             navController.navigate(R.id.navigation_rides);
         }
+    }
+
+    // Set up navigation for driver
+    private void setupDriverNavigation() {
+        navController = Navigation.findNavController(this, R.id.nav_host_driver_dashboard);
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.driver_dashboard, R.id.driver_rides, R.id.navigation_inbox, R.id.navigation_settings)
+                .build();
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(binding.navView, navController);
+    }
+
+    // Set up navigation for rider
+    private void setupRiderNavigation() {
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_customer_home_page);
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_home, R.id.navigation_rides, R.id.navigation_inbox, R.id.navigation_settings)
+                .build();
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(binding.navView, navController);
+    }
+
+    public void getDeviceRegistrationToken(){
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("App token: ", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+                        // Log and toast
+                        DEVICE_REGISTRATION_TOKEN = token;
+                        database.getReference().child("Users").child(auth.getUid()).child("token").setValue(token);
+                        Log.d("App token: ", token);
+//                        Toast.makeText(MainActivity.this, token, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

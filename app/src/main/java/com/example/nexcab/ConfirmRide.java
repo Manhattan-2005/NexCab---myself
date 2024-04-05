@@ -60,9 +60,11 @@ public class ConfirmRide extends Fragment {
         String dropoffLocation = bundle.getString("dropoffLocation");
 
         String date = null, time = null;
+        boolean instant = false;
         if(Objects.equals(parentFragment, "DropoffLocation")) {
             date = LocalDate.now().toString();
             time = LocalTime.now().toString();
+            instant = true;
         }else if(Objects.equals(parentFragment, "DropoffLocationPreebook")){
             date = bundle.getString("Date");
             time = bundle.getString("Time");
@@ -76,6 +78,7 @@ public class ConfirmRide extends Fragment {
 
         String finalTime = time;
         String finalDate = date;
+        boolean finalInstantstate = instant;
         binding.confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,19 +88,28 @@ public class ConfirmRide extends Fragment {
 
                 // create ride to save in database
                 // status will always be Upcoming when new ride is created
-                Ride ride = new Ride(pickupLocation,dropoffLocation, finalDate, finalTime,"Upcoming",binding.rideSharingCheckbox.isChecked(),userid);
+                Ride ride = new Ride(pickupLocation,dropoffLocation, finalDate, finalTime,"Upcoming",binding.rideSharingCheckbox.isChecked(),userid,finalInstantstate);
 
                 // set the hasUpcomingRide for current User
-                User thisUser = User.getUser();
-                thisUser.setHasUpcomingRide(true);
+//                User thisUser = User.getUser();
+//                thisUser.setHasUpcomingRide(true);
 
+                // set ride under Users
                 rides = database.getReference().child("Users").child(userid).child("Rides");
                 String id = rides.push().getKey();
+                // set id to ride object
+                ride.setRideId(id);
                 assert id != null;
                 Task<Void> task = rides.child(id).setValue(ride);
 
-//                Log.d("Task", "was task successfull "+task.isSuccessful());
-                //display toast
+                // set ride under Rides
+                assert pickupLocation != null;
+                String pickupLocationLowercase = pickupLocation.toLowerCase();
+                rides = database.getReference().child("Rides").child(pickupLocationLowercase);
+                // set id to ride object
+                ride.setRideId(id);
+                rides.child(id).setValue(ride);
+
                 if(!id.equals("")){
                     Toast.makeText(getContext(), "Ride request create!\n You will be notified when accepted", Toast.LENGTH_SHORT).show();
                     FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();

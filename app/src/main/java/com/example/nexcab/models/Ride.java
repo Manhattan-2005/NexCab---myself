@@ -3,14 +3,47 @@ package com.example.nexcab.models;
 import java.io.Serializable;
 
 public class Ride implements Serializable {
-    private String pickupLocation, dropoffLocation, date, time, status;
-    private boolean ride_sharing;
-    private String userId; // New field to store user's ID
+    private String pickupLocation, dropoffLocation, date, time, status,rideId;
+    private boolean ride_sharing,is_booked,instant;
+
+    public String getRideId() {
+        return rideId;
+    }
+
+    private String userId,driverId; // New field to store user's ID
+
+    public void setIs_booked(boolean is_booked) {
+        this.is_booked = is_booked;
+    }
+
+    public void setRideId(String rideId) {
+        this.rideId = rideId;
+    }
+
+    public boolean isInstant() {
+        return instant;
+    }
+
+    public void setInstant(boolean instant) {
+        this.instant = instant;
+    }
 
     public Ride() {
     }
 
-    public Ride(String pickupLocation, String dropoffLocation, String date, String time, String status, boolean ride_sharing, String userId) {
+    public boolean isIs_booked() {
+        return is_booked;
+    }
+
+    public String getDriverId() {
+        return driverId;
+    }
+
+    public void setDriverId(String driverId) {
+        this.driverId = driverId;
+    }
+
+    public Ride(String pickupLocation, String dropoffLocation, String date, String time, String status, boolean ride_sharing, String userId,boolean instant) {
         this.pickupLocation = pickupLocation;
         this.dropoffLocation = dropoffLocation;
         this.date = date;
@@ -18,6 +51,8 @@ public class Ride implements Serializable {
         this.status = status;
         this.ride_sharing = ride_sharing;
         this.userId = userId;
+        this.is_booked = false;
+        this.instant = instant;
     }
 
     public void setStatus(String status) {

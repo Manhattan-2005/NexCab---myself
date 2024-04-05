@@ -5,12 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
 import com.example.nexcab.MainActivity;
-import com.example.nexcab.models.User;
-import com.example.nexcab.R;
 import com.example.nexcab.databinding.ActivityLoginBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -62,22 +61,27 @@ public class LoginActivity extends AppCompatActivity {
         loginBinding.loginbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                auth.signInWithEmailAndPassword(loginBinding.username.getText().toString(),
-                        loginBinding.password.getText().toString())
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if(task.isSuccessful()) {
-                                    Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                if(!TextUtils.isEmpty(loginBinding.username.getText()) && !TextUtils.isEmpty(loginBinding.password.getText())){
+                    auth.signInWithEmailAndPassword(loginBinding.username.getText().toString(),
+                                    loginBinding.password.getText().toString())
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if(task.isSuccessful()) {
+                                        Toast.makeText(LoginActivity.this, "Login Successful!", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
 //                                    intent.putExtra("role",User.temprole);
-                                    startActivity(intent);
-                                }else{
-                                    Toast.makeText(LoginActivity.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
+                                        startActivity(intent);
+                                    }else{
+                                        Toast.makeText(LoginActivity.this, Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                            }
-                        });
+                            });
+                }else{
+                    Toast.makeText(LoginActivity.this, "Please fill all fields!", Toast.LENGTH_SHORT).show();
                 }
+            }
+
         });
 
         // skip sign in if user is logged in

@@ -10,7 +10,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="instant_ride">Instant Ride</string>
-    <string name="prebook">Preebook</string>
+    <string name="prebook">Pre-book</string>
     <string name="pickup_location">Pickup Location</string>
     <string name="destination">Destination</string>
     <string name="number_of_passengers">Number of Passengers</string>
@@ -31,4 +31,6 @@
     <string name="welcomeback">Welcome Back</string>
     <string name="signup">Sign up</string>
     <string name="passwordrepeat">Repeat Password</string>
+    <string name="channel_name">Demo update</string>
+    <string name="channel_description">Demo description</string>
 </resources>

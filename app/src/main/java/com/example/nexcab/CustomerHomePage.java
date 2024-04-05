@@ -18,9 +18,13 @@ import android.widget.Toast;
 
 import com.example.nexcab.databinding.FragmentCustomerHomePageBinding;
 import com.example.nexcab.models.User;
+import com.google.firebase.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class CustomerHomePage extends Fragment {
     FragmentCustomerHomePageBinding binding;
+    FirebaseUser currentUser;
     Intent intent;
     public CustomerHomePage() {
         // Required empty public constructor
@@ -32,6 +36,9 @@ public class CustomerHomePage extends Fragment {
         // initialize the binding
         binding = FragmentCustomerHomePageBinding.inflate(inflater,container,false);
 
+        // get current user
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
         // find both buttons
         Button instant_ride = binding.instantRideButton;
         Button prebook = binding.prebookButton;
@@ -39,12 +46,14 @@ public class CustomerHomePage extends Fragment {
         instant_ride.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!User.getUser().isHasUpcomingRide()) {
-                    intent = new Intent(getContext(), Location.class);
-                    startActivity(intent);
-                }else{
-                    Toast.makeText(getContext(),"You can only make one Instant Ride!",Toast.LENGTH_SHORT);
-                }
+//                if (!User.getUser().isHasUpcomingRide()) {
+//                    intent = new Intent(getContext(), Location.class);
+//                    startActivity(intent);
+//                }else{
+//                    Toast.makeText(getContext(),"You can only make one Instant Ride!",Toast.LENGTH_SHORT);
+//                }
+                intent = new Intent(getContext(), Location.class);
+                startActivity(intent);
             }
         });
         prebook.setOnClickListener(new View.OnClickListener() {

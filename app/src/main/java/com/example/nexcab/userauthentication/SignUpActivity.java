@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -56,29 +57,50 @@ public class SignUpActivity extends AppCompatActivity {
         binding.signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                firebaseAuth.createUserWithEmailAndPassword
-                        (binding.email.getText().toString(),binding.password.getText().toString())
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                // Add to real time database if task is successful
-                                if(task.isSuccessful()){
-                                    User user = new User(binding.firstname.getText().toString(),binding.lastname.getText().toString(),
-                                            binding.email.getText().toString(),binding.password.getText().toString(),User.temprole);
-                                    user.setHasUpcomingRide(false);
-                                    Toast.makeText(SignUpActivity
-                                            .this, "User Created Successfully!", Toast.LENGTH_SHORT).show();
-                                    String id = task.getResult().getUser().getUid();
-                                    firebaseDatabase.getReference().child("Users").child(id).setValue(user);
-                                }
-                                else{
-                                    Toast.makeText(SignUpActivity
-                                            .this, Objects.requireNonNull(task.getException())
-                                            .getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+                if(checkFields()){
+                    if(binding.password.getText() == binding.passwordRepeat.getText())
+                        addUser();
+                    else
+                        Toast.makeText(SignUpActivity.this, "Password doesn't match!", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(SignUpActivity.this, "Please fill all fields!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+    }
+
+    public void addUser(){
+        firebaseAuth.createUserWithEmailAndPassword
+                        (binding.email.getText().toString(),binding.password.getText().toString())
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        // Add to real time database if task is successful
+                        if(task.isSuccessful()){
+                            User user = new User(binding.firstname.getText().toString(),binding.lastname.getText().toString(),
+                                    binding.email.getText().toString(),binding.password.getText().toString(),User.temprole);
+                            user.setHasUpcomingRide(false);
+                            Toast.makeText(SignUpActivity
+                                    .this, "User Created Successfully!", Toast.LENGTH_SHORT).show();
+                            String id = task.getResult().getUser().getUid();
+                            firebaseDatabase.getReference().child("Users").child(id).setValue(user);
+
+                            // navigate to login page
+                            intent = new Intent(getApplicationContext(),LoginActivity.class);
+                            startActivity(intent);
+                        }
+                        else{
+                            Toast.makeText(SignUpActivity
+                                    .this, Objects.requireNonNull(task.getException())
+                                    .getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private boolean checkFields(){
+        return !TextUtils.isEmpty(binding.firstname.getText()) && !TextUtils.isEmpty(binding.lastname.getText()) &&
+                !TextUtils.isEmpty(binding.email.getText()) && !TextUtils.isEmpty(binding.password.getText()) &&
+                !TextUtils.isEmpty(binding.passwordRepeat.getText());
     }
 }

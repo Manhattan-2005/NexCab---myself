@@ -9,12 +9,18 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
+import com.example.nexcab.R;
 import com.example.nexcab.adapters.RideAdapter;
 import com.example.nexcab.databinding.FragmentRideBinding;
 import com.example.nexcab.models.Ride;
+import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -26,69 +32,66 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class RideFragment extends Fragment {
 
-    private FragmentRideBinding binding;
-    FirebaseDatabase database;
-    FirebaseAuth firebaseAuth;
-    DatabaseReference reference;
-    List<Ride> rides;
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentRideBinding.inflate(inflater, container, false);
-        return binding.getRoot();
-    }
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
 
+    @Nullable
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_ride, container, false);
 
-        RecyclerView recyclerView = binding.recyclerviewRides;
+        tabLayout = view.findViewById(R.id.tabLayout);
+        viewPager = view.findViewById(R.id.viewPager);
 
-        // init database
-        database = FirebaseDatabase.getInstance();
-        // init Authentication object
-        firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-
-        // create list of Ride objects
-        rides = new ArrayList<>();
-        String userid = user.getUid();
-        Log.d("userid", userid);
-        reference = database.getReference().child("Users").child(userid).child("Rides");
-
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                for (DataSnapshot dataSnapshot : snapshot.getChildren() ) {
-                    Ride ride = new Ride();
-                    ride = dataSnapshot.getValue(Ride.class);
-                    assert ride != null;
-//                    Log.d("RideFragment", "Ride Pickup: "+ride.getPickupLocation()+"\nRide dropoff: "+ride.getDropoffLocation()+"\nDate: "+ride.getDate()+"\nTime"+ride.getTime()+"\nShare: "+ride.isRide_sharing());
-                    rides.add(ride);
-                    Log.d("Rides List Count", String.valueOf(rides.size()));
-                }
-
-                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                recyclerView.setAdapter(new RideAdapter(getContext(),rides));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        // Set up TabLayout with custom text color
+        tabLayout.setTabTextColors(getResources().getColor(R.color.white), getResources().getColor(R.color.white));
 
 
+        // Set up ViewPager with adapter
+        PagerAdapter pagerAdapter = new PagerAdapter(getChildFragmentManager());
+        viewPager.setAdapter(pagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
 
+        return view;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    // Adapter for ViewPager
+    private class PagerAdapter extends FragmentPagerAdapter {
+
+        private final String[] tabTitles = {"Upcoming", "Recent"};
+
+        public PagerAdapter(FragmentManager fm) {
+            super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        }
+
+        @NonNull
+        @Override
+        public Fragment getItem(int position) {
+            // Return the appropriate Fragment based on the position
+            switch (position) {
+                case 0:
+                    return new UpcomingRidesFragment();
+                case 1:
+                    return new RecentRidesFragment();
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return tabTitles.length;
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return tabTitles[position];
+        }
     }
+
 }

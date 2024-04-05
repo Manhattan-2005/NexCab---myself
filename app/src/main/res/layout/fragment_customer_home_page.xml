@@ -23,9 +23,10 @@
 
             <Button
                 android:id="@+id/instant_ride_button"
+                style="@style/Widget.MaterialComponents.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:layout_margin="40dp"
+                android:layout_margin="80dp"
                 android:backgroundTint="@color/primary_yellow"
                 android:text="@string/instant_ride"
                 android:textColor="@color/black"
@@ -34,10 +35,10 @@
 
             <Button
                 android:id="@+id/prebook_button"
+                style="@style/Widget.MaterialComponents.Button.Icon"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
-                android:layout_marginHorizontal="40dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginHorizontal="80dp"
                 android:layout_marginBottom="100dp"
                 android:backgroundTint="@color/primary_yellow"
                 android:text="@string/prebook"
