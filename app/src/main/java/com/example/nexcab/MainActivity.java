@@ -8,6 +8,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+import android.window.OnBackInvokedCallback;
+import android.window.OnBackInvokedDispatcher;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +24,8 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.nexcab.databinding.ActivityMainBinding;
 import com.example.nexcab.driver.DriverActivity;
 import com.example.nexcab.models.User;
+import com.example.nexcab.temp.RideStartedActivity;
+import com.example.nexcab.temp.StartRideMapsActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -59,22 +63,54 @@ public class MainActivity extends AppCompatActivity {
         setupRiderNavigation();
 
         // Handle intent if called from booking activity
-        Intent intent = getIntent();
-        String source = intent.getStringExtra("Source");
+        Intent intent1 = getIntent();
+        String source = intent1.getStringExtra("Source");
         if (source != null && source.equals("booking")) {
             navController.navigate(R.id.navigation_rides);
         }
     }
 
-    // Set up navigation for driver
-    private void setupDriverNavigation() {
-        navController = Navigation.findNavController(this, R.id.nav_host_driver_dashboard);
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.driver_dashboard, R.id.driver_rides, R.id.navigation_inbox, R.id.navigation_settings)
-                .build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-        NavigationUI.setupWithNavController(binding.navView, navController);
+    @NonNull
+    @Override
+    public OnBackInvokedDispatcher getOnBackInvokedDispatcher() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+            return new OnBackInvokedDispatcher() {
+                @Override
+                public void registerOnBackInvokedCallback(int priority, @NonNull OnBackInvokedCallback callback) {
+
+                }
+
+                @Override
+                public void unregisterOnBackInvokedCallback(@NonNull OnBackInvokedCallback callback) {
+
+                }
+            };
+        }
+        return null;
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //
+        if(FirebaseMessageReceiver.callRideStartedActivity){
+            Intent intent = new Intent(this, StartRideMapsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            FirebaseMessageReceiver.callRideStartedActivity = false;
+            finish();
+        }
+    }
+
+    // Set up navigation for driver
+//    private void setupDriverNavigation() {
+//        navController = Navigation.findNavController(this, R.id.nav_host_driver_dashboard);
+//        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+//                R.id.driver_dashboard, R.id.driver_rides, R.id.navigation_inbox, R.id.navigation_settings)
+//                .build();
+//        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+//        NavigationUI.setupWithNavController(binding.navView, navController);
+//    }
 
     // Set up navigation for rider
     private void setupRiderNavigation() {

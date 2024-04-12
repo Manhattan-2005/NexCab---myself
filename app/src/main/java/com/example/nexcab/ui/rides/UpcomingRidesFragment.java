@@ -76,13 +76,13 @@ public class UpcomingRidesFragment extends Fragment {
         Log.d("userid", userid);
         reference = database.getReference().child("Users").child(userid).child("Rides");
 
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 for (DataSnapshot dataSnapshot : snapshot.getChildren() ) {
-                    Ride ride = new Ride();
+                    Ride ride;
                     ride = dataSnapshot.getValue(Ride.class);
                     assert ride != null;
                     Log.d("RideFragment", "Ride Pickup: "+ride.getPickupLocation()+"\nRide dropoff: "+ride.getDropoffLocation()+"\nDate: "+ride.getDate()+"\nTime"+ride.getTime()+"\nShare: "+ride.isRide_sharing());
@@ -99,9 +99,6 @@ public class UpcomingRidesFragment extends Fragment {
 
             }
         });
-
-
-
     }
 
 }

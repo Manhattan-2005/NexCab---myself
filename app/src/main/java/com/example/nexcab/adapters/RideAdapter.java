@@ -31,12 +31,12 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RideAdapter.RideViewHolder holder, int position) {
-        String s = "Pickup Location : "+rides.get(position).getPickupLocation()+"\n";
-        s += "Dropoff Location : "+rides.get(position).getDropoffLocation()+"\n";
-        s += "Date : "+rides.get(position).getDate()+"\n";
-        s += "Status: "+rides.get(position).getStatus();
-        Log.d("RideAdapter", "After Initialization: "+s);
-        holder.textView.setText(s);
+        String pickup = rides.get(position).getPickupLocation();
+        String dropoff = rides.get(position).getDropoffLocation();
+        String date = "Date: "+rides.get(position).getDate();
+        holder.pickupLocation.setText(pickup);
+        holder.dropoffLocation.setText(dropoff);
+        holder.date.setText(date);
     }
 
     @Override
@@ -45,11 +45,13 @@ public class RideAdapter extends RecyclerView.Adapter<RideAdapter.RideViewHolder
     }
 
     static class RideViewHolder extends RecyclerView.ViewHolder{
-        TextView textView;
+        TextView pickupLocation,dropoffLocation,date;
 
         public RideViewHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.textView_for_rides);
+            pickupLocation = itemView.findViewById(R.id.pickupTextView);
+            dropoffLocation = itemView.findViewById(R.id.dropoffTextView);
+            date = itemView.findViewById(R.id.dateTextView);
         }
     }
 }

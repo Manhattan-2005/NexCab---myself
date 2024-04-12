@@ -58,7 +58,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(checkFields()){
-                    if(binding.password.getText() == binding.passwordRepeat.getText())
+                    if(binding.password.getText().toString().equals(binding.passwordRepeat.getText().toString()))
                         addUser();
                     else
                         Toast.makeText(SignUpActivity.this, "Password doesn't match!", Toast.LENGTH_SHORT).show();

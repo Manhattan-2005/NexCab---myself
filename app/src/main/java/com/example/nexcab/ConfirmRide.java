@@ -27,6 +27,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Objects;
 
 public class ConfirmRide extends Fragment {
@@ -63,7 +65,9 @@ public class ConfirmRide extends Fragment {
         boolean instant = false;
         if(Objects.equals(parentFragment, "DropoffLocation")) {
             date = LocalDate.now().toString();
-            time = LocalTime.now().toString();
+            Log.d("ConfirmRide: ", date);
+            time = convertToLocalApproxTime(LocalTime.now());
+            Log.d("ConfirmRide: ", time);
             instant = true;
         }else if(Objects.equals(parentFragment, "DropoffLocationPreebook")){
             date = bundle.getString("Date");
@@ -89,7 +93,7 @@ public class ConfirmRide extends Fragment {
                 // create ride to save in database
                 // status will always be Upcoming when new ride is created
                 Ride ride = new Ride(pickupLocation,dropoffLocation, finalDate, finalTime,"Upcoming",binding.rideSharingCheckbox.isChecked(),userid,finalInstantstate);
-
+                ride.setUser1Id(userid);
                 // set the hasUpcomingRide for current User
 //                User thisUser = User.getUser();
 //                thisUser.setHasUpcomingRide(true);
@@ -118,20 +122,13 @@ public class ConfirmRide extends Fragment {
                     Intent intent = new Intent(getContext(),MainActivity.class);
                     intent.putExtra("Source","booking");
                     startActivity(intent);
-
-                    // replace fragment according to instant ride or preebook
-//                    if(Objects.equals(parentFragment,"DropoffLocation")){
-//                        Intent intent = new Intent(getContext(),MainActivity.class);
-//                        intent.putExtra("Source","booking");
-//                        startActivity(intent);
-////                        fragmentTransaction.replace(R.id.location_frameLayout_id,new RideFragment());
-//                    }
-//                    else if(Objects.equals(parentFragment,"DropoffLocationPreebook")){
-//                        fragmentTransaction.replace(R.id.prebook_container,new RideFragment());
-//                    }
                     fragmentTransaction.commit();
                 }
             }
         });
+    }
+    public static String convertToLocalApproxTime(LocalTime time) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.getDefault());
+        return time.format(formatter);
     }
 }

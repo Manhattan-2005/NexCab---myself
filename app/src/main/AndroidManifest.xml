@@ -2,14 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -20,10 +21,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NexCab"
         tools:targetApi="31">
+        <activity
+            android:name=".temp.StartRideMapsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.search.SearchResultActivity"
+            android:exported="false" />
+        <activity
+            android:name=".temp.RideStartedActivity"
+            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyA6Y2BX-uF7ttWvfucY47nRsIUuz_LpJJE"/>
+            android:value="AIzaSyA6Y2BX-uF7ttWvfucY47nRsIUuz_LpJJE" />
 
         <activity
             android:name=".driver.DriverActivity"
@@ -33,8 +43,7 @@
             android:exported="false" />
         <activity
             android:name=".userauthentication.UseIdentification"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".Prebook"
             android:exported="false" />
@@ -57,6 +66,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name" />
+
         <service
             android:name=".FirebaseMessageReceiver"
             android:exported="false">

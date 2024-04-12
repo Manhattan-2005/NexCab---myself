@@ -49,6 +49,7 @@ dependencies {
     implementation("com.google.firebase:firebase-database:20.3.0")
     implementation("com.google.firebase:firebase-inappmessaging-display:20.4.0")
     implementation("com.google.firebase:firebase-messaging:23.4.1")
+    implementation("com.squareup.okhttp3:okhttp:3.10.0")
     implementation("com.google.android.libraries.places:places:3.4.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

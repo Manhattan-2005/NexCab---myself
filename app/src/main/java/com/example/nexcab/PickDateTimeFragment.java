@@ -93,7 +93,7 @@ public class PickDateTimeFragment extends Fragment {
         DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                date = day + " / " + month + " / " + year;
+                date = year + "-" + month + "-" + day;
                 binding.pickDate.setText(date);
             }
         },year,month,day);
@@ -106,7 +106,7 @@ public class PickDateTimeFragment extends Fragment {
         TimePickerDialog timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                time = hourOfDay + " : " + minute;
+                time = hourOfDay + ":" + minute;
                 binding.pickTime.setText(time);
             }
         },hour,minute,true);

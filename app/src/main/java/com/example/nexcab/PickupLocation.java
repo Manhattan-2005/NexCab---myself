@@ -1,12 +1,11 @@
 package com.example.nexcab;
 
-import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -15,51 +14,35 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
+import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.example.nexcab.adapters.PlaceAutocompleteAdapter;
 import com.example.nexcab.databinding.FragmentPickupLocationBinding;
-import com.example.nexcab.models.Ride;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
-
+import java.util.List;
 import java.util.Objects;
 
 public class PickupLocation extends Fragment implements OnMapReadyCallback {
     FragmentPickupLocationBinding binding;
-    Fragment parentFragment;
-    Intent intent;
     Bundle bundle;
 
     //map
     private GoogleMap mMap;
-    private AutoCompleteTextView autoCompleteTextView;
-    private PlacesClient placesClient;
 
+    SearchView mapSearchView;
+    SupportMapFragment supportMapFragment;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentPickupLocationBinding.inflate(getLayoutInflater());
         View rootView = binding.getRoot();
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        assert mapFragment != null;
-        mapFragment.getMapAsync(this);
-
-        if (!Places.isInitialized()) {
-            Places.initialize(requireContext(), "AIzaSyA6Y2BX-uF7ttWvfucY47nRsIUuz_LpJJE");
-        }
-        placesClient = Places.createClient(requireContext());
-
-        autoCompleteTextView = rootView.findViewById(R.id.autoCompleteTextView);
-        autoCompleteTextView.setAdapter(new PlaceAutocompleteAdapter(requireContext(), placesClient));
 
         return binding.getRoot();
     }
@@ -68,10 +51,42 @@ public class PickupLocation extends Fragment implements OnMapReadyCallback {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+
+        androidx.appcompat.widget.SearchView searchView = binding.searchViewPickupLocation;
+        binding.searchViewPickupLocation.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                String location = binding.searchViewPickupLocation.getQuery().toString();
+                List<Address> addressList = null;
+
+                if(location != null){
+                    Geocoder geocoder = new Geocoder(requireContext());
+                    try{
+                        addressList = geocoder.getFromLocationName(location,1);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+                assert addressList != null;
+                Address address = addressList.get(0);
+                LatLng latLng = new LatLng(address.getLatitude(),address.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(latLng).title(location));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
         binding.nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!binding.pickupLocationString.getText().toString().equals("")){
+                if(!binding.searchViewPickupLocation.getQuery().toString().equals("")){
                     sendPickupLocation();
                 }else{
                     Toast.makeText(getContext(), "Please select location!", Toast.LENGTH_SHORT).show();
@@ -79,6 +94,8 @@ public class PickupLocation extends Fragment implements OnMapReadyCallback {
 
             }
         });
+
+        supportMapFragment.getMapAsync(this);
 
     }
 
@@ -98,7 +115,7 @@ public class PickupLocation extends Fragment implements OnMapReadyCallback {
             bundle.putString("ParentFragment","PickupLocationPreebook");
         }
         //set the bundle values
-        bundle.putString("pickupLocation", binding.pickupLocationString.getText().toString());
+        bundle.putString("pickupLocation", binding.searchViewPickupLocation.getQuery().toString());
 
         Fragment fragment = new DropoffLocation();
         // pass data to next fragment
@@ -119,13 +136,5 @@ public class PickupLocation extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-
-        // Enable the "My Location" layer if the user has granted permission.
-        if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED) {
-            mMap.setMyLocationEnabled(true);
-        }
     }
 }

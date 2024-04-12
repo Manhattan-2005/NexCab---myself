@@ -33,4 +33,5 @@
     <string name="passwordrepeat">Repeat Password</string>
     <string name="channel_name">Demo update</string>
     <string name="channel_description">Demo description</string>
+    <string name="search">Search</string>
 </resources>
